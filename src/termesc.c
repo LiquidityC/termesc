@@ -108,6 +108,8 @@ termesc_reset_scroll(void)
 void
 termesc_close(void)
 {
+	termesc_reset_scroll();
+
 	// Clean the buffer
 	send("\x1b[2J");
 
