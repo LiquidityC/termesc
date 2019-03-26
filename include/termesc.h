@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * @file termesc.h
  * @author Linus Probert <linus.probert@gmail.com>
@@ -13,6 +9,10 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdarg.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @defgroup Attributes
@@ -32,7 +32,7 @@ extern "C" {
 /** underline output */
 #define underline "4"
 /** reverse colors of output */
-#define   reverse "7"
+#define       rev "7"
 
 /** foreground attribute @see fmt */
 #define        fg "3"
@@ -111,6 +111,18 @@ void
 termesc_hide_cursor(bool hide);
 
 /**
+ * Clear the terminal
+ */
+void
+termesc_clear_term(void);
+
+/**
+ * Clear the current line
+ */
+void
+termesc_clear_line(void);
+
+/**
  * Populate a termdim struct with the current terminal dimensions.
  *
  * @param td pointer to a termdim struct
@@ -153,5 +165,5 @@ void
 termesc_close(void);
 
 #ifdef __cplusplus
-} // extern "C"
+}; // extern "C"
 #endif

@@ -45,14 +45,17 @@ on_resize(int unused)
 static void
 clear_buffer(void)
 {
-	send("\x1b[2J");
+	send(esca term_clear);
 }
 
 void
 termesc_init(void)
 {
+	// Save cursor
+	send(esca "7");
+
 	//enter the alternate buffer
-	send("\x1b[?1049h");
+	send(esca alt_buf);
 
 	// Termios init
 	struct termios t;
@@ -75,9 +78,21 @@ void
 termesc_hide_cursor(bool hide)
 {
 	if (hide)
-		send("\x1b[?25l");
+		send(esca curs low);
 	else
-		send("\x1b[?25h");
+		send(esca curs high);
+}
+
+void
+termesc_clear_term(void)
+{
+	send(esca term_clear);
+}
+
+void
+termesc_clear_line(void)
+{
+	send(esca clear_line);
 }
 
 void
@@ -108,6 +123,9 @@ termesc_reset_scroll(void)
 void
 termesc_close(void)
 {
+	// Termios restore
+	tcsetattr(1, TCSANOW, &initial);
+
 	termesc_reset_scroll();
 
 	// Clean the buffer
@@ -116,8 +134,9 @@ termesc_close(void)
 	// Switch to normal buffer
 	send("\x1b[?1049l");
 
+	// Restore cursor
+	send(esca "8");
+
 	termesc_hide_cursor(false);
 
-	// Termios restore
-	tcsetattr(1, TCSANOW, &initial);
 }
