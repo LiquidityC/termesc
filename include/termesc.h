@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @file termesc.h
  * @author Linus Probert <linus.probert@gmail.com>
@@ -147,3 +151,7 @@ termesc_reset_scroll(void);
  */
 void
 termesc_close(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
