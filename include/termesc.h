@@ -142,6 +142,8 @@ termesc_goto(uint32_t col, uint32_t row);
 /**
  * Define a scrolling area.
  *
+ * @see termesc_reset_scroll
+ *
  * @param start The start row of the scrolling region
  * @param end The end row of the scrolling region
  */
@@ -149,10 +151,26 @@ void
 termesc_set_scroll(uint32_t start, uint32_t end);
 
 /**
- * Reset scrolling region to the entire terminal
+ * Reset scrolling region to the entire terminal.
+ *
+ * This tends to mess up the default buffer after your application exits.
+ * Not sure why and how to deal with it. Input would be nice.
+ *
+ * @see termesc_set_scroll
  */
 void
 termesc_reset_scroll(void);
+
+/**
+ * Disables input echoing and canonical behaviour.
+ *
+ * This prevents user typing from upsetting your TUI. You need to 
+ * run termesc_init before this call can be made.
+ *
+ * @see termesc_init
+ */
+void
+termesc_disable_echo_canonical(void);
 
 /**
  * Reset the terminal to it's original state.

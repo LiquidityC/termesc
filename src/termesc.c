@@ -19,7 +19,7 @@
 #define send(str) write(1, str, sizeof(str))
 
 static struct termdim dimension = { 0, 0 };
-static struct termios initial;
+static struct termios termios_initial, termios_modified;
 
 static void
 fmtsend(const char *fmt, ...)
@@ -51,18 +51,12 @@ clear_buffer(void)
 void
 termesc_init(void)
 {
-	// Save cursor
-	send(esca "7");
-
 	//enter the alternate buffer
-	send(esca alt_buf);
+	send(esca alt_buf high);
 
-	// Termios init
-	struct termios t;
-	tcgetattr(1, &t);
-	initial = t;
-	t.c_lflag &= (~ECHO & ~ICANON);
-	tcsetattr(1, TCSANOW, &t);
+	// Termios retrieval
+	tcgetattr(1, &termios_modified);
+	termios_initial = termios_modified;
 
 	//clean up the buffer
 	clear_buffer();
@@ -72,6 +66,13 @@ termesc_init(void)
 
 	// Listen for resize signals
 	signal(SIGWINCH, on_resize);
+}
+
+void
+termesc_disable_echo_canonical(void)
+{
+	termios_modified.c_lflag &= (~ECHO & ~ICANON);
+	tcsetattr(1, TCSANOW, &termios_modified);
 }
 
 void
@@ -86,7 +87,7 @@ termesc_hide_cursor(bool hide)
 void
 termesc_clear_term(void)
 {
-	send(esca term_clear);
+	clear_buffer();
 }
 
 void
@@ -124,19 +125,13 @@ void
 termesc_close(void)
 {
 	// Termios restore
-	tcsetattr(1, TCSANOW, &initial);
-
-	termesc_reset_scroll();
+	tcsetattr(1, TCSANOW, &termios_initial);
 
 	// Clean the buffer
-	send("\x1b[2J");
-
-	// Switch to normal buffer
-	send("\x1b[?1049l");
-
-	// Restore cursor
-	send(esca "8");
+	clear_buffer();
 
 	termesc_hide_cursor(false);
 
+	// Switch to normal buffer
+	send(esca alt_buf low);
 }
