@@ -20,21 +20,21 @@ int main(int argc, char *argv[])
 	printf("Begin top scroll\n");
 	for (size_t i = 0; i < 100; ++i) {
 		usleep(50*1000);
-		printf(fmt(fg blue) "%u\n" fmt(plain), i);
+		printf(fmt(fg blue) "%zu\n" fmt(plain), i);
 	}
 
 	termesc_goto(0, td.rows - 3);
 	printf("Begin prompt scroll\n");
 	for (size_t i = 0; i < 10; ++i) {
 		usleep(500*1000);
-		printf(fmt(fg green) "%u\n" fmt(plain), i);
+		printf(fmt(fg green) "%zu\n" fmt(plain), i);
 	}
 
 	termesc_goto(0, td.rows - 5);
 	printf("Begin top scroll\n");
 	for (size_t i = 0; i < 100; ++i) {
 		usleep(50*1000);
-		printf(fmt(fg yellow) "%u\n" fmt(plain), i);
+		printf(fmt(fg yellow) "%zu\n" fmt(plain), i);
 	}
 
 

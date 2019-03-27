@@ -22,16 +22,6 @@ static struct termdim dimension = { 0, 0 };
 static struct termios termios_initial, termios_modified;
 
 static void
-fmtsend(const char *fmt, ...)
-{
-	va_list args;
-	char msg[1024];
-	va_start(args, fmt);
-	vsnprintf(msg, 1024, fmt, args);
-	send(msg);
-}
-
-static void
 on_resize(int unused)
 {
 	(void) unused;
